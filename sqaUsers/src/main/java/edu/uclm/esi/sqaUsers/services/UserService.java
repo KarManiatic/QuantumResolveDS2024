@@ -31,7 +31,7 @@ public class UserService {
 	
 	public String login(Usuario user) {
 		Optional<Usuario> optUser = this.userDao.findByEmailAndPwd(user.getEmail(), user.getPwd());
-		if(optUser.isPresent()) //puede que sea isEmpty, pero me da problemas
+		if(optUser.isEmpty()) //puede que sea isEmpty, pero me da problemas
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Credenciales inválidas");
 		
 		user = optUser.get();
