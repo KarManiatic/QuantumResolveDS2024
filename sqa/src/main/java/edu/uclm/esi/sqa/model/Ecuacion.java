@@ -1,9 +1,10 @@
 package edu.uclm.esi.sqa.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ecuacion {
+public class Ecuacion implements Serializable{
 	private List<Simple> sumandos;
 	private int lambda;
 
@@ -50,4 +51,5 @@ public class Ecuacion {
 	public void setLambda(int lambda) {
 			this.lambda = lambda;
 		}
+
 }

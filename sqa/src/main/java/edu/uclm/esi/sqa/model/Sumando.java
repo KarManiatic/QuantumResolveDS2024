@@ -17,6 +17,10 @@ public abstract class Sumando {
 	public void setIndependiente() {
 		this.independiente = true;
 	}
+	
+	public String getTipo() {
+		return this.getClass().toString();
+	}
 
 	public int calcular(int x) {
 		return this.factor * x;

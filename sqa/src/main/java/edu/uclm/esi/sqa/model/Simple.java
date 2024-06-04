@@ -1,5 +1,8 @@
 package edu.uclm.esi.sqa.model;
 
-public class Simple extends Sumando {
+import java.io.Serializable;
+
+public class Simple extends Sumando implements Serializable {
+
 
 }

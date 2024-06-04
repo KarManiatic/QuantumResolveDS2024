@@ -1,21 +1,23 @@
 package edu.uclm.esi.sqa.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Hamiltoniano {
+public class Hamiltoniano implements Serializable {
 	
 	private List<Ecuacion> ecuaciones = new ArrayList<>();
-	private Suma suma;
+	private Suma suma = new Suma();
 	
 	public void add(Ecuacion equation) {
 		this.ecuaciones.add(equation);
+		
 	}
 	
 	public Suma getSuma() {
 		return suma;
 	}
-
+	
 	public static Hamiltoniano defecto() {
 		Cuadrado c1 = new Cuadrado();
 		c1.setFactor(-7);

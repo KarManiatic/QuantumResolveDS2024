@@ -1,8 +1,10 @@
 package edu.uclm.esi.sqa.http;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import edu.uclm.esi.sqa.model.Hamiltoniano;
 import edu.uclm.esi.sqa.services.EcuacionesService;
+import edu.uclm.esi.sqa.model.Hamiltoniano;
 
 @RestController
 @RequestMapping("ecuaciones")
-public class EcuacionesController {
+public class EcuacionesController extends CommonController{
 	
 	@Autowired
 	private EcuacionesService service;
@@ -50,7 +52,31 @@ public class EcuacionesController {
 	}
 	
 	@PutMapping("/generarHamiltoniano")
-	public Hamiltoniano generarHamiltoniano (@RequestBody List<Map<String, Object>> ecuaciones) {
-		return this.service.generarHamiltoniano(ecuaciones);
+	public Hamiltoniano generarHamiltoniano (HttpServletRequest req, @RequestBody List<Map<String, Object>> ecuaciones) {
+		super.validarPeticion(req);
+		
+		
+		String token = req.getHeader("token");
+		if(token==null)
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ande vas");
+		
+		try {
+			if (!validarToken(token))
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tu token no sirve");
+		}
+		catch (IOException E) {
+			throw new  ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "El sistema de control de credenciales no está funcionando." );
+		}
+		
+		Hamiltoniano h = EcuacionesService.generarHamiltoniano(ecuaciones);
+		try {
+			super.saveHamiltoniano(token, h);
+		}
+		catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de disco: " + e.getMessage());
+		}
+		return h;
 	}
+	
+	
 }
