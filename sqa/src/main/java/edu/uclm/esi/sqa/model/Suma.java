@@ -1,10 +1,10 @@
 package edu.uclm.esi.sqa.model;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Suma implements Serializable {
+public class Suma {
 	private List<Sumando> sumandos;
 	
 	public Suma() {
@@ -19,5 +19,9 @@ public class Suma implements Serializable {
 		for(Sumando s : sumandos)
 			this.sumandos.add(s);
 	}
+
+	public void remove(Sumando s2) {
+		this.sumandos.remove(s2);
+    }
 	
 }

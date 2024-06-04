@@ -14,6 +14,18 @@ public abstract class Sumando {
 		this.index = index;
 	}
 	
+	public int getFactor() {
+		return this.factor;
+	}
+
+	public int getIndex() {
+		return this.index;
+	}
+	
+	public boolean esIndependiente() {
+		return this.independiente;
+	}
+	
 	public void setIndependiente() {
 		this.independiente = true;
 	}

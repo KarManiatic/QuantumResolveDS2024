@@ -1,10 +1,9 @@
 package edu.uclm.esi.sqa.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ecuacion implements Serializable{
+public class Ecuacion{
 	private List<Simple> sumandos;
 	private int lambda;
 
@@ -32,6 +31,10 @@ public class Ecuacion implements Serializable{
 	    	this.add(sumando);
 	    }
 	}
+	
+	public List<Simple> getSumandos() {
+		return sumandos;
+	}
 
 	public void add(Simple sumando) {
 		this.sumandos.add(sumando);
@@ -47,9 +50,21 @@ public class Ecuacion implements Serializable{
 		return result;
 
 	}
+	
+	public boolean tieneIndependiente() {
+		boolean result = false;
+		for (Simple sumando : this.sumandos)
+			if (sumando.esIndependiente())
+				result = true;
+		return result;
+	}
 
 	public void setLambda(int lambda) {
 			this.lambda = lambda;
 		}
+
+	public int getLambda() {
+		return this.lambda;
+	}
 
 }

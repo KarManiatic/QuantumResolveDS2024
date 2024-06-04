@@ -1,7 +1,6 @@
 package edu.uclm.esi.sqa.model;
 
-
-public class  Doble extends Sumando {
+public class  Doble extends Sumando{
 	private int indexB;
 	
 	public void setIndexB(int indexB) {

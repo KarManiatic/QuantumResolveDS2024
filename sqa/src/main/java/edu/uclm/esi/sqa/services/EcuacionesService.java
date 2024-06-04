@@ -37,10 +37,12 @@ public class EcuacionesService {
 		for(Map<String, Object> ecuacion : ecuaciones) {
 			String eq = (String) ecuacion.get("eq");
 			int lambda = (int)ecuacion.get("lambda");
+			
 			Ecuacion equation = new Ecuacion(eq);
 			equation.setLambda(lambda);
 			h.add(equation);
 		}
+		h.generarSuma();
 		return h;
 	}
 	
