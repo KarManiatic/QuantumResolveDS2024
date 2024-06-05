@@ -1,9 +1,19 @@
 package edu.uclm.esi.sqa.services;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import edu.uclm.esi.sqa.model.Ecuacion;
 import edu.uclm.esi.sqa.model.Hamiltoniano;
@@ -46,7 +56,7 @@ public class EcuacionesService {
 		return h;
 	}
 	
-	public static MatrizTriangular generarMatrizTriangular(String hFileName) {
+	public static MatrizTriangular generarMatrizTriangular(String hFileName) throws IOException {
 		// Lógica para obtener los datos relevantes del archivo hFileName
 	    List<Integer> datos = obtenerDatosDesdeArchivo(hFileName);
 
@@ -55,12 +65,51 @@ public class EcuacionesService {
 
 	    return matrizTriangular;
 	}
+	/*
+	private static List<Integer> obtenerDatosDesdeArchivo(String hFileName) throws IOException {
+	    String content = new String(Files.readAllBytes(Paths.get(hFileName)));
+	    Gson gson = new Gson();
+	    JsonObject obj = gson.fromJson(content, JsonObject.class);
+	    JsonArray sumandos = obj.getAsJsonArray("sumandos");
+	    List<Integer> factores = new ArrayList<>();
 
-	private static List<Integer> obtenerDatosDesdeArchivo(String hFileName) {
-		// TODO Auto-generated method stub
-		return null;
+	    for (JsonElement sumandoElem : sumandos) {
+	        JsonObject sumando = sumandoElem.getAsJsonObject();
+	        int factor = sumando.get("factor").getAsInt();
+	        factores.add(factor);
+	    }
+
+	    return factores;
+	}*/
+	
+	private static List<Integer> obtenerDatosDesdeArchivo(String hFileName) throws IOException {
+	    String content = new String(Files.readAllBytes(Paths.get(hFileName)));
+	    Gson gson = new Gson();
+	    JsonObject obj = gson.fromJson(content, JsonObject.class);
+	    JsonArray sumandos = obj.getAsJsonArray("sumandos");
+
+	    // Crear un mapa para almacenar los factores con índices únicos y dobles
+	    Map<Integer, List<Integer>> mapaFactores = new LinkedHashMap<>();
+
+	    for (JsonElement sumandoElem : sumandos) {
+	        JsonObject sumando = sumandoElem.getAsJsonObject();
+	        int factor = sumando.get("factor").getAsInt();
+	        int index = sumando.get("index").getAsInt();
+
+	        // Añadir el factor a la lista correspondiente en el mapa
+	        mapaFactores.computeIfAbsent(index, k -> new ArrayList<>()).add(factor);
+	    }
+
+	    // Combinar las listas en el mapa para obtener una lista final ordenada
+	    List<Integer> factoresOrdenados = new ArrayList<>();
+	    for (List<Integer> factores : mapaFactores.values()) {
+	        factoresOrdenados.addAll(factores);
+	    }
+
+	    return factoresOrdenados;
 	}
-		
+
+	
 	
 }
 
