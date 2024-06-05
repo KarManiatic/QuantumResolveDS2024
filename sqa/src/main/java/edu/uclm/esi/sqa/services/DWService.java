@@ -9,27 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class DWService {
 	
-	/*
-	public String generarCodigo(int[][] matriz) throws Exception {
-		String template = this.read("dwaveTemplate.txt");
-		
-		StringBuilder sb = new StringBuilder("x=[");
-		for(int i=0; i<matriz.length; i++) {
-			sb.append("\"x" + i + "\",");
-		}
-		sb.append("]\n");
-		String lineaX = sb.toString();
-		
-		int posRules = template.indexOf("#RULES#")+"#RULES#".length()+1;
-		String inicio = template.substring(0, posRules);
-		
-		String fin = template.substring(posRules);
-		
-		String inicializacionMatriz = "...";
-		String code = inicio + lineaX + inicializacionMatriz + fin;
-		return code;
-	}*/
-	
 	public String generarCodigo(int[][] matriz) throws Exception {
 	    String template = this.read("dwaveTemplate.txt");
 	    
@@ -45,19 +24,17 @@ public class DWService {
 	    
 	    String fin = template.substring(posRules);
 	    
-	    // Inicialización de la matriz
-	    StringBuilder sbMatriz = new StringBuilder("Q = {");
+	    StringBuilder sbRules = new StringBuilder();
 	    for(int i=0; i<matriz.length; i++) {
-	        for(int j=i; j<matriz[i].length; j++) {
+	        for(int j=0; j<matriz[i].length; j++) {
 	            if(matriz[i][j] != 0) {
-	                sbMatriz.append("(\"x" + i + "\", \"x" + j + "\"): " + matriz[i][j] + ",");
+	                sbRules.append("Q[('x" + i + "', 'x" + j + "')] = " + matriz[i][j] + "\n");
 	            }
 	        }
 	    }
-	    sbMatriz.append("}\n");
-	    String inicializacionMatriz = sbMatriz.toString();
+	    String reglas = sbRules.toString();
 	    
-	    String code = inicio + lineaX + inicializacionMatriz + fin;
+	    String code = inicio + lineaX + reglas + fin;
 	    return code;
 	}
 
