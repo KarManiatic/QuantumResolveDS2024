@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,39 +18,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.sqa.services.EcuacionesService;
 import edu.uclm.esi.sqa.model.Hamiltoniano;
+import edu.uclm.esi.sqa.model.MatrizTriangular;
 
+@CrossOrigin
 @RestController
 @RequestMapping("ecuaciones")
 public class EcuacionesController extends CommonController{
 	
 	@Autowired
 	private EcuacionesService service;
-	
-	@GetMapping("/recibir")
-	public String recibir(@RequestParam String eq) {
-		if(eq.trim().length() == 0)
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "La ecuación no puede estar vacía");
-		
-		return this.service.contarIncognitas(eq);
-	}
-	
-	@PutMapping("/recibir")
-	public String recibirPorPut(@RequestBody Map<String, Object> info) {
-		String eq = info.get("eq").toString();
-		int lambda = (int)info.get("lambda");
-		
-		return this.recibir(eq);
-	}
-	
-	@PutMapping("/calcular")
-	//Recibe el JSON "eq":"4x0+3x1", "lambda":7, "x":[3,5] como lista de enteros el último
-	public int calcular(@RequestBody Map<String, Object> info){
-		String eq = info.get("eq").toString();
-		int lambda = (int)info.get("lambda");
-		List<Integer> x = (List<Integer>) info.get("x");
-		
-		return this.service.calcular(eq, x);
-	}
+
 	
 	@PutMapping("/generarHamiltoniano")
 	public Hamiltoniano generarHamiltoniano (HttpServletRequest req, @RequestBody List<Map<String, Object>> ecuaciones) {
@@ -58,11 +36,11 @@ public class EcuacionesController extends CommonController{
 		
 		String token = req.getHeader("token");
 		if(token==null)
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ande vas");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Intento de acceso no autorizado");
 		
 		try {
 			if (!validarToken(token))
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tu token no sirve");
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token inválido");
 		}
 		catch (IOException E) {
 			throw new  ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "El sistema de control de credenciales no está funcionando." );
@@ -78,5 +56,32 @@ public class EcuacionesController extends CommonController{
 		return h;
 	}
 	
-	
+	@PutMapping("/generarMatriz")
+	public int[][] generarMatriz(HttpServletRequest req, @RequestBody String hFileName) {
+        super.validarPeticion(req);
+        
+        String token = req.getHeader("token");
+        if(token==null)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Intento de acceso no autorizado");
+        
+        try {
+            if (!validarToken(token))
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token inválido");
+        }
+        catch (IOException E) {
+            throw new  ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "El sistema de control de credenciales no está funcionando." );
+        }
+        
+        
+        try {
+        	MatrizTriangular mt = EcuacionesService.generarMatrizTriangular(hFileName);
+            super.saveMatrizTriangular(token, mt);
+            return mt.GetMatriz();
+        }
+        catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error de disco: " + e.getMessage());
+        }
+        
+        
+    }	
 }

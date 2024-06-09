@@ -27,7 +27,11 @@ public class MatrizTriangular {
             throw new IllegalArgumentException("Índices inválidos para una matriz triangular.");
         }
     }
-
+    
+    public int [][] GetMatriz(){
+    	return matriz;
+    }
+    
     public int getDimension() {
         return matriz.length;
     }
@@ -36,10 +40,6 @@ public class MatrizTriangular {
         return i >= 0 && i < matriz.length && j >= 0;
     }
     
-    public int [][] GetMatriz(){
-    	return matriz;
-    }
-
     public static MatrizTriangular generarMatrizTriangular(List<Integer> datos) {
         int n = (int) Math.sqrt(2 * datos.size());
         MatrizTriangular matrizTriangular = new MatrizTriangular(n);

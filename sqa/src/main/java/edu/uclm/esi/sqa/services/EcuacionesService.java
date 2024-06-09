@@ -65,22 +65,6 @@ public class EcuacionesService {
 
 	    return matrizTriangular;
 	}
-	/*
-	private static List<Integer> obtenerDatosDesdeArchivo(String hFileName) throws IOException {
-	    String content = new String(Files.readAllBytes(Paths.get(hFileName)));
-	    Gson gson = new Gson();
-	    JsonObject obj = gson.fromJson(content, JsonObject.class);
-	    JsonArray sumandos = obj.getAsJsonArray("sumandos");
-	    List<Integer> factores = new ArrayList<>();
-
-	    for (JsonElement sumandoElem : sumandos) {
-	        JsonObject sumando = sumandoElem.getAsJsonObject();
-	        int factor = sumando.get("factor").getAsInt();
-	        factores.add(factor);
-	    }
-
-	    return factores;
-	}*/
 	
 	private static List<Integer> obtenerDatosDesdeArchivo(String hFileName) throws IOException {
 	    String content = new String(Files.readAllBytes(Paths.get(hFileName)));

@@ -34,7 +34,7 @@ public class UserController {
 	
 	@PostMapping("/registrar")
 	public void registrar(@RequestBody CredencialesRegistro cr) {
-		//cr.comprobar();
+		cr.comprobar();
 		Usuario usuario = new Usuario();
 		usuario.setEmail(cr.getEmail());
 		usuario.setPwd(cr.getPwd1());

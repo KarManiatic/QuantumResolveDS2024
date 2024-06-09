@@ -32,8 +32,13 @@ public class DWaveController extends CommonController{
 	private DWService service;
 	
 	@PutMapping("/generarCodigo")
-    public String generarCodigo(HttpServletRequest req, @RequestParam int[][] matriz) {
+    public String generarCodigo(HttpServletRequest req, @RequestBody Map<String, List<List<Integer>>> payload) {
 		String token = super.validarPeticion(req);
+		
+		List<List<Integer>> listaDeListas = payload.get("matriz");
+	    int[][] matriz = listaDeListas.stream()
+	        .map(l -> l.stream().mapToInt(i -> i).toArray())
+	        .toArray(int[][]::new);
 		
 		try {
 			String codigo = this.service.generarCodigo(matriz);
@@ -57,7 +62,6 @@ public class DWaveController extends CommonController{
 			String mtFileName = super.saveMatrizTriangular(token, mt);
 			String codigo = this.service.generarCodigo(mt.GetMatriz());
 			String codigoFileName = super.saveCodigo(token, codigo);
-			
 			EjecutorPython ejecutor = new EjecutorPython();
 			Map<String, Object> resultado = new HashMap<>();
 			String key;

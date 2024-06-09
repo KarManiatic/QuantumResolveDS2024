@@ -11,16 +11,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class EjecutorPython {
 	
 	public String ejecuta(String fileName) {
-		// 1) "Abrir" la consola en el directorio en el que queremos ejecutar el proceso 
-		// 2) Establecer el PATH y otras variables de entorno
-		// 3) Construimos el comando que queremos ejecutar
-		// 4) Redireccionar la salida estándar de la consola a un archivo
-		// 5) Redireccionar la salida de error de la consola a un archivo
-		// 6) Lanzar el proceso 
-		// 7) Esperamos a que termine
-		// 8) Leer el archivo de salido y el archivo de error
-		// 9) Si no hay error, devolver a quien corresponda el resultado de la salida 
-		// 10) Si hay error, devolver a quien corresponda el mensaje de error para que haga llegar al front una expcepcion
 		
 		fileName = "C:\\Users\\Carlos\\practicaDisoft\\codigo.py";
 		ProcessBuilder pb = new ProcessBuilder("python", fileName);
@@ -40,7 +30,6 @@ public class EjecutorPython {
 			Process process = pb.start();
 			process.waitFor();
 			if(new File(errores).length()>0) {
-				//Paso 10
 			}
 			else {
 				String respuesta;

@@ -45,15 +45,6 @@ public abstract class CommonController {
 		return userPath + File.separator;	
 	}
 	
-	/*
-	public String saveHamiltoniano(String token, Hamiltoniano h) throws FileNotFoundException, IOException {
-	    String fileName = this.getName(token) + "hamiltoniano.txt";
-	    try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            oos.writeObject(h);
-        }
-	    return fileName; // Devuelve el nombre del archivo guardado
-	} */
-	
 	public String saveHamiltoniano(String token, Hamiltoniano h) throws FileNotFoundException {
 	    Gson gson = new Gson();
 	    String fileName = this.getName(token) + "hamiltoniano.txt";
@@ -62,7 +53,7 @@ public abstract class CommonController {
 	    	String json = gson.toJson(suma);
 	        out.println(json);
 	    }
-	    return fileName; // Devuelve el nombre del archivo guardado
+	    return fileName; 
 	}
 
 	public String saveMatrizTriangular(String token, MatrizTriangular mt) throws FileNotFoundException, IOException {
@@ -86,11 +77,11 @@ public abstract class CommonController {
 	public String validarPeticion(HttpServletRequest req) {
 		String token = req.getHeader("token");
 		if(token == null)
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ande vas");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Intento de acceso no autorizado");
 		
 		try {
 			if(!validarToken(token))
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Tu token no sirve");
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token inválido");
 		}
 		catch (IOException e) {
 			throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "El sistema de control de credenciales no está disponible");
